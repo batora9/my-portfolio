@@ -1,4 +1,3 @@
-import React from 'react';
 import './App.css'
 
 function App() {
@@ -6,7 +5,7 @@ function App() {
   return (
     <>
       <div className="App">
-          <img src="./images/batora_icon.png" className="App-logo" alt="logo" width={240} height={240} />
+          <img src="./images/logo.png" className="App-logo" alt="logo" width={240} height={240} />
       </div>
       <h1>Batrachoxin</h1>
       <div className="card">
