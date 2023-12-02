@@ -1,22 +1,18 @@
 import './App.css'
+import { BrowserRouter, Route,Link, Routes } from 'react-router-dom';
+import { Home } from './pages/Home';
+import { Blogs } from './pages/Blogs';
 
 function App() {
 
   return (
     <>
-      <div className="App">
-          <img src="./images/logo.png" className="App-logo" alt="logo" width={240} height={240} />
-      </div>
-      <h1>Batora</h1>
-      <a href="https://x.com/265" target="_blank"> 
-        <img src="./images/x_icon.svg" className="App-logo" alt="link" width={40} height={40} />
-      </a>
-      <a href="https://github.com/batora9" target="_blank"> 
-        <img src="./images/github-mark-white.svg" className="App-logo" alt="link" width={40} height={40} />
-      </a>
-      <h2>Software / Web Engineer</h2>
-      <div className="card">
-      </div>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/blog" element={<Blogs />} />
+        </Routes>
+      </BrowserRouter>
     </>
   );
 }
