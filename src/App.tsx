@@ -11,6 +11,9 @@ function App() {
       <a href="https://x.com/265" target="_blank"> 
         <img src="./images/x_icon.svg" className="App-logo" alt="link" width={40} height={40} />
       </a>
+      <a href="https://github.com/batora9" target="_blank"> 
+        <img src="./images/github-mark-white.svg" className="App-logo" alt="link" width={40} height={40} />
+      </a>
       <h2>Software / Web Engineer</h2>
       <div className="card">
       </div>
