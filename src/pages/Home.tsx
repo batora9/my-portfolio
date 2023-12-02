@@ -1,4 +1,11 @@
+import { useEffect } from "react"
+import { Link } from "react-router-dom"
+
 export const Home = () => {
+  useEffect(() => {
+    document.title = 'ばとらの部屋'; // タイトルを変更する
+  }, []);
+
     return (
         <div>
             <img src="./images/logo.png" className="App-logo" alt="logo" width={240} height={240} />
