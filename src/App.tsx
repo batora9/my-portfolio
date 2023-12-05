@@ -4,15 +4,11 @@ import { Home } from './pages/Home';
 import { Blogs } from './pages/Blogs';
 import { Page404 } from './pages/Page404';
 import { About } from './pages/AboutMe';
-import { Header } from './components/AppBar';
 
 function App() {
 
   return (
     <>
-      <header className="header">
-        {Header()}
-      </header>
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Home />} />
