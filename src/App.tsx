@@ -27,13 +27,13 @@ function App() {
           <BrowserRouter>
             <Header />
             <Container>
-            </Container>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/blog" element={<Blogs />} />
               <Route path='/about' element={<About />} />
               <Route path="*" element={<Page404 />} />
             </Routes>
+            </Container>
           </BrowserRouter>
         <Footer/>
       </ThemeProvider>
