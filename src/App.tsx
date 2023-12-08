@@ -26,7 +26,7 @@ function App() {
         <CssBaseline />
           <BrowserRouter>
             <Header />
-            <Container>
+            <Container style={{ minHeight: 'calc(100vh - 64px - 64px)' }}>
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/blog" element={<Blogs />} />
