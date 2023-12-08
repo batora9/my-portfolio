@@ -1,4 +1,6 @@
 import { useEffect } from "react"
+import { Container } from '@mui/material';
+import { Typography } from '@mui/material';
 
 export const Home = () => {
   useEffect(() => {
@@ -9,7 +11,9 @@ export const Home = () => {
         
         <div>
             <img src="./images/logo.png" className="App-logo" alt="logo" width={120} height={120} />
-            <h1>Batora</h1>
+            <Typography variant="h3" component="div" sx={{ flexGrow: 1 }}>
+                Batora
+            </Typography>
             <a href="https://x.com/265" target="_blank"> 
                 <img src="./images/x_icon.svg" className="App-logo" alt="link" width={40} height={40} />
             </a>
@@ -17,6 +21,13 @@ export const Home = () => {
                 <img src="./images/github-mark-white.svg" className="App-logo" alt="link" width={40} height={40} />
             </a>
             <h2>Software / Web Engineer</h2>
+            <Container>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <p>こんにちは！</p>
+                    <p>ばとらです。</p>
+                    <p>このサイトは現在制作中です。</p>
+                </Typography>
+            </Container>
         </div>
     )
 }
