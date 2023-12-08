@@ -11,7 +11,7 @@ export const Home = () => {
     return (
         
         <div>
-            <Container maxWidth="sm" sx={{ mt: 4, mb: 4 }} style={{textAlign: 'center'}}>
+            <Container maxWidth="sm" sx={{ pt: 4, pb: 4 }} style={{textAlign: 'center'}}>
                 <img src="./images/logo.png" className="App-logo" alt="logo" width={120} height={120} />
                 <h1>Batora</h1>
                 <Link to="https://x.com/265" target="_blank" rel="noopener noreferrer">
