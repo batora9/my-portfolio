@@ -9,6 +9,7 @@ import { Footer } from './components/Footer';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
+import { Login } from './pages/login';
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ function App() {
               <Route path="/blog" element={<Blogs />} />
               <Route path='/about' element={<About />} />
               <Route path="*" element={<Page404 />} />
+              <Route path="/login" element={<Login />} />
             </Routes>
             </Container>
           </BrowserRouter>
