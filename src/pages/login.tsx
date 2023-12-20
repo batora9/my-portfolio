@@ -1,27 +1,44 @@
-import { useEffect } from "react"
-import { Box, Container } from '@mui/material';
-import { TextField } from '@mui/material';
-import { Button } from '@mui/material';
+import { useState } from 'react';
+import axios from 'axios';
 
 export const Login = () => {
-    useEffect(() => {
-        document.title = 'Login'; // タイトルを変更する
-      }, []);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
 
-    return (
-      <Container maxWidth="md" sx={{ pt: 4, pb: 4 }} style={{textAlign: 'center'}}>
-        <Box sx={{ '& > :not(style)': { m: 1 } }} component="form">
-          <h3>Login</h3>
-          <div>
-            <TextField id="outlined-basic" label="User Name" variant="outlined" />
-          </div>
-          <div>
-            <TextField id="outlined-basic" label="Password" variant="outlined" type="password" />
-          </div>
-          <Button variant="contained" size="medium">Send</Button>
-        </Box>
-      </Container>
-    )
-  }
+  // ログインボタンが押された時の処理
+  const handleLogin = async () => { 
+    try {
+      const response = await axios.post('http://localhost:8080/login', {
+        username,
+        password,
+      });
+
+      console.log('Received token:', response.data.token);
+      // ここで取得したトークンを保存して認証された状態を保持する
+    } catch (error) {
+      console.error('Login failed:', error);
+      // エラー処理を行う
+    }
+  };
+
+  return (
+    <div>
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        
+      />
+      <button onClick={handleLogin}>Login</button>
+    </div>
+  );
+};
 
 export default Login;
