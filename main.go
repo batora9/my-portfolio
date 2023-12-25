@@ -1,10 +1,14 @@
 package main
 
 import (
+	"log"
+	"os"
 	"encoding/json"
-	_"fmt"
+	_ "fmt"
 	"net/http"
+	"github.com/joho/godotenv"
 	"github.com/rs/cors"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type User struct {
@@ -12,12 +16,19 @@ type User struct {
 	Password string `json:"password"`
 }
 
+
 var authenticatedUsers = map[string]string{
-	"user1": "password1",
-	"user2": "password2",
+	"batrachotoxin": "",
+	// "user2": "password2",
 }
 
 func main() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal(".env ファイルの読み込みに失敗しました")
+	}
+	authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
+
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
 
@@ -37,30 +48,37 @@ func main() {
 
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
-	if r.Method == "OPTIONS" {
-		w.WriteHeader(http.StatusOK)
-		return
-	}
-	var user User
-	err := json.NewDecoder(r.Body).Decode(&user)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
+    w.Header().Set("Access-Control-Allow-Origin", "http://localhost:5173")
+    if r.Method == "OPTIONS" {
+        w.WriteHeader(http.StatusOK)
+        return
+    }
+    var user User
+    err := json.NewDecoder(r.Body).Decode(&user)
+    if err != nil {
+        http.Error(w, err.Error(), http.StatusBadRequest)
+        return
+    }
 
-	pass, exists := authenticatedUsers[user.Username]
-	if !exists || pass != user.Password {
-		http.Error(w, "Invalid credentials", http.StatusUnauthorized)
-		return
-	}
+    hashedPassword, exists := authenticatedUsers[user.Username]
+    if !exists {
+        http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+        return
+    }
 
-	// ここで適切な認証トークンやセッションを生成し、フロントエンドに返す
-	// 例えば、JWT (JSON Web Token) を使用するなど
+    err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(user.Password))
+    if err != nil {
+        http.Error(w, "Invalid credentials", http.StatusUnauthorized)
+        return
+    }
 
-	response := map[string]string{"token": "your_generated_token_here"}
-	jsonResponse, _ := json.Marshal(response)
-	w.Header().Set("Content-Type", "application/json")
-	w.WriteHeader(http.StatusOK)
-	w.Write(jsonResponse)
+    // ログイン成功時の処理
+    // 適切な認証トークンやセッションを生成し、フロントエンドに返す
+    // 例えば、JWT (JSON Web Token) を使用するなど
+
+    response := map[string]string{"token": "your_generated_token_here"}
+    jsonResponse, _ := json.Marshal(response)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write(jsonResponse)
 }
