@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography';
 export const Header = () => {
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="sticky">
+      <AppBar position="sticky" style={{ color: "#e0f2f1", backgroundColor: '#333' }}>
         <Toolbar>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
             <Link to="/" style={{ textDecoration: 'none', color: '#fff' }}>batoran.com</Link>

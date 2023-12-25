@@ -19,7 +19,6 @@ type User struct {
 
 var authenticatedUsers = map[string]string{
 	"batrachotoxin": "",
-	// "user2": "password2",
 }
 
 func main() {
