@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 	"encoding/json"
-	_ "fmt"
+	_"fmt"
 	"net/http"
 	"github.com/joho/godotenv"
 	"github.com/rs/cors"

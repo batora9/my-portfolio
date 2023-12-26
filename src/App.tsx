@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { Container } from '@mui/material';
 import { Login } from './pages/login';
+import { Admin } from './pages/admin-home';
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,7 @@ function App() {
               <Route path='/about' element={<About />} />
               <Route path="*" element={<Page404 />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/admin" element={<Admin />} />
             </Routes>
             </Container>
           </BrowserRouter>

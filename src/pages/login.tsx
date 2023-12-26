@@ -1,7 +1,13 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 export const Login = () => {
+  useEffect(() => {
+    document.title = 'ログイン'; // タイトルを変更する
+  }, []);
+
+  const navigation = useNavigate()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -15,6 +21,9 @@ export const Login = () => {
 
       console.log('Received token:', response.data.token);
       // ここで取得したトークンを保存して認証された状態を保持する
+      
+      // ログイン後の画面に遷移する
+      navigation('/admin');
     } catch (error) {
       console.error('Login failed:', error);
       // エラー処理を行う
