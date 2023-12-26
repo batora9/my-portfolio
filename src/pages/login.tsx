@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Box, Container } from '@mui/material';
+import { TextField, Button,Typography } from '@mui/material';
 import axios from 'axios';
 
 export const Login = () => {
@@ -10,6 +12,7 @@ export const Login = () => {
   const navigation = useNavigate()
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   // ログインボタンが押された時の処理
   const handleLogin = async () => { 
@@ -26,26 +29,44 @@ export const Login = () => {
       navigation('/admin');
     } catch (error) {
       console.error('Login failed:', error);
-      // エラー処理を行う
+      // エラーメッセージを設定
+      setErrorMessage('ユーザー名またはパスワードが間違っています');
     }
   };
 
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        
-      />
-      <button onClick={handleLogin}>Login</button>
+      <Container maxWidth="md" sx={{ pt: 4, pb: 4 }} style={{textAlign: 'center'}}>
+        <Box sx={{ '& > :not(style)': { m: 3 } }} component="form">
+          <Typography variant="body2" style={{ color: 'red' }}>{errorMessage}</Typography>
+          <div>
+            <TextField
+              id="outlined-basic"
+              label="User Name"
+              variant="outlined"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+          <div>
+            <TextField 
+              id="outlined-basic"
+              label="Password"
+              variant="outlined"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+          <Button 
+            variant="contained"
+            size="medium"
+            onClick={handleLogin}
+          >
+              ログイン
+          </Button>
+        </Box>
+      </Container>
     </div>
   );
 };
