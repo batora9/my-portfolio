@@ -24,7 +24,7 @@ var authenticatedUsers = map[string]string{
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(".env ファイルの読み込みに失敗しました")
+		log.Printf(".env ファイルの読み込みに失敗しました")
 	}
 	authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
 
@@ -42,7 +42,7 @@ func main() {
 
     handler := c.Handler(mux)
 
-    http.ListenAndServe(":8080", handler)
+    http.ListenAndServe("0.0.0.0:8080", handler)
 }
 
 
