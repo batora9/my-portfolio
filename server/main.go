@@ -24,7 +24,7 @@ var authenticatedUsers = map[string]string{
 func main() {
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal(".env ファイルの読み込みに失敗しました")
+		log.Printf(".env ファイルの読み込みに失敗しました")
 	}
 	authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
 
@@ -34,7 +34,7 @@ func main() {
     // CORSミドルウェアの設定
     // CORSミドルウェアのカスタマイズ
 	c := cors.New(cors.Options{
-    AllowedOrigins:   []string{"http://localhost:5173"},
+    AllowedOrigins:   []string{os.Getenv("ALLOWED_ORIGINS")},
     AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
     AllowedHeaders:   []string{"Content-Type", "Authorization"},
     AllowCredentials: true,
@@ -42,7 +42,7 @@ func main() {
 
     handler := c.Handler(mux)
 
-    http.ListenAndServe(":8080", handler)
+    http.ListenAndServe("0.0.0.0:8080", handler)
 }
 
 
