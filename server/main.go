@@ -34,7 +34,7 @@ func main() {
     // CORSミドルウェアの設定
     // CORSミドルウェアのカスタマイズ
 	c := cors.New(cors.Options{
-    AllowedOrigins:   []string{"http://localhost:5173"},
+    AllowedOrigins:   []string{os.Getenv("ALLOWED_ORIGINS")},
     AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
     AllowedHeaders:   []string{"Content-Type", "Authorization"},
     AllowCredentials: true,
