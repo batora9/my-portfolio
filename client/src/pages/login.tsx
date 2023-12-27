@@ -17,7 +17,7 @@ export const Login = () => {
   // ログインボタンが押された時の処理
   const handleLogin = async () => { 
     try {
-      const response = await axios.post('http://localhost:8080/login', {
+      const response = await axios.post(import.meta.env.VITE_SERVER_URL + '/login', {
         username,
         password,
       });
