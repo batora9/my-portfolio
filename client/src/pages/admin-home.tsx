@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { Container } from '@mui/material';
 
 export const Admin = () => {
     useEffect(() => {
@@ -7,7 +8,9 @@ export const Admin = () => {
 
     return(
         <div>
+            <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
             <h1>管理画面</h1>
+            </Container>
         </div>
     )
 }
