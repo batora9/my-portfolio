@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Box, Container } from '@mui/material';
 import { TextField, Button,Typography } from '@mui/material';
 import axios from 'axios';
+import { AuthUserContext } from '../providers/user';
 
 export const Login = () => {
   useEffect(() => {
@@ -13,6 +14,7 @@ export const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+  const { updateUser } = useContext(AuthUserContext);
 
   // ログインボタンが押された時の処理
   const handleLogin = async () => { 
@@ -21,9 +23,12 @@ export const Login = () => {
         username,
         password,
       });
-      
+
       // ここで取得したトークンを保存して認証された状態を保持する
       localStorage.setItem('token', response.data.token);
+      
+      // ユーザー情報を更新する
+      await updateUser();
       
       // ログイン後の画面に遷移する
       navigation('/admin');

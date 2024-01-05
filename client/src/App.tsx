@@ -12,6 +12,7 @@ import { Container } from "@mui/material";
 import { Login } from "./pages/login";
 import { Admin } from "./pages/admin-home";
 import { AuthUserProvider } from "./providers/user";
+import { AuthProtection, UnauthProtection } from "./lib/router";
 
 const theme = createTheme({
   palette: {
@@ -34,9 +35,23 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/blog" element={<Blogs />} />
                 <Route path="/about" element={<About />} />
+                <Route
+                  path="/login"
+                  element={
+                    <UnauthProtection>
+                      <Login />
+                    </UnauthProtection>
+                  }
+                />
+                <Route
+                  path="/admin"
+                  element={
+                    <AuthProtection>
+                      <Admin />
+                    </AuthProtection>
+                  }
+                />
                 <Route path="*" element={<Page404 />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/admin" element={<Admin />} />
               </Routes>
             </Container>
           </BrowserRouter>
