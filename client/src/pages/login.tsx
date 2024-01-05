@@ -21,9 +21,9 @@ export const Login = () => {
         username,
         password,
       });
-
-      console.log('Received token:', response.data.token);
+      
       // ここで取得したトークンを保存して認証された状態を保持する
+      localStorage.setItem('token', response.data.token);
       
       // ログイン後の画面に遷移する
       navigation('/admin');
