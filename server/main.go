@@ -30,6 +30,7 @@ func main() {
 
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
+    mux.HandleFunc("/health_check", healthCheckHandler)
 
     // CORSミドルウェアの設定
     // CORSミドルウェアのカスタマイズ
@@ -75,4 +76,10 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
     w.Write(jsonResponse)
+}
+
+func healthCheckHandler(w http.ResponseWriter, r *http.Request) {
+    w.Header().Set("Content-Type", "text/plain")
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
 }
