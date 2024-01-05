@@ -7,7 +7,6 @@ import (
 	_"fmt"
 	"net/http"
 	"github.com/joho/godotenv"
-	"github.com/rs/cors"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -16,36 +15,42 @@ type User struct {
 	Password string `json:"password"`
 }
 
-
 var authenticatedUsers = map[string]string{
 	"batrachotoxin": "",
 }
 
 func main() {
 	err := godotenv.Load()
-	if err != nil {
-		log.Printf(".env ファイルの読み込みに失敗しました")
-	}
-	authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
+    if err != nil {
+        log.Print(".env ファイルの読み込みに失敗しました")
+    }
+    log.Print(os.Getenv("ALLOWED_ORIGINS"))
+    log.Print(os.Getenv("HASHED_PASSWORD"))
+
+    authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
 
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
     mux.HandleFunc("/health_check", healthCheckHandler)
 
-    // CORSミドルウェアの設定
-    // CORSミドルウェアのカスタマイズ
-	c := cors.New(cors.Options{
-    AllowedOrigins:   []string{os.Getenv("ALLOWED_ORIGINS")},
-    AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
-    AllowedHeaders:   []string{"Content-Type", "Authorization"},
-    AllowCredentials: true,
-	})
-
-    handler := c.Handler(mux)
+    handler := corsMiddleware(mux)
 
     http.ListenAndServe("0.0.0.0:8080", handler)
 }
 
+func corsMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        w.Header().Set("Access-Control-Allow-Origin", os.Getenv("ALLOWED_ORIGINS"))
+        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, OPTIONS")
+        w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
+
+        if r.Method == "OPTIONS" {
+            w.WriteHeader(http.StatusOK)
+            return
+        }
+        next.ServeHTTP(w, r)
+    })
+}
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
     var user User
