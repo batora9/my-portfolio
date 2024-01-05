@@ -1,11 +1,12 @@
 package main
 
 import (
-	"log"
-	"os"
 	"encoding/json"
-	_"fmt"
+	_ "fmt"
+	"log"
 	"net/http"
+	"os"
+    
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -15,8 +16,10 @@ type User struct {
 	Password string `json:"password"`
 }
 
-var authenticatedUsers = map[string]string{
-	"batrachotoxin": "",
+var authenticatedUsers = map[string]string{}
+
+func loadAdmins() {
+    authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
 }
 
 func main() {
@@ -24,10 +27,8 @@ func main() {
     if err != nil {
         log.Print(".env ファイルの読み込みに失敗しました")
     }
-    log.Print(os.Getenv("ALLOWED_ORIGINS"))
-    log.Print(os.Getenv("HASHED_PASSWORD"))
 
-    authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
+    loadAdmins()
 
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
