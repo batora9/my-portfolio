@@ -12,15 +12,25 @@ import (
 	"golang.org/x/crypto/bcrypt"
 )
 
-type User struct {
+type LoginRequest struct {
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
 
-var authenticatedUsers = map[string]string{}
+type User struct {
+    Username string `json:"username"`
+    Password string `json:"password"`
+    Age      int    `json:"age"`
+}
+
+var authenticatedUsers = map[string]User{}
 
 func loadAdmins() {
-    authenticatedUsers["batrachotoxin"] = os.Getenv("HASHED_PASSWORD")
+    authenticatedUsers["batrachotoxin"] = User{
+        Username: "batrachotoxin",
+        Password: os.Getenv("HASHED_PASSWORD"),
+        Age:      20,
+    }
 }
 
 func main() {
@@ -34,6 +44,7 @@ func main() {
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
     mux.HandleFunc("/health_check", healthCheckHandler)
+    mux.HandleFunc("/me", meHandler)
 
     handler := corsMiddleware(mux)
 
@@ -55,20 +66,20 @@ func corsMiddleware(next http.Handler) http.Handler {
 }
 
 func loginHandler(w http.ResponseWriter, r *http.Request) {
-    var user User
-    err := json.NewDecoder(r.Body).Decode(&user)
+    var loginRequest LoginRequest
+    err := json.NewDecoder(r.Body).Decode(&loginRequest)
     if err != nil {
         http.Error(w, err.Error(), http.StatusBadRequest)
         return
     }
 
-    hashedPassword, exists := authenticatedUsers[user.Username]
+    user, exists := authenticatedUsers[loginRequest.Username]
     if !exists {
         http.Error(w, "Invalid credentials", http.StatusUnauthorized)
         return
     }
 
-    err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(user.Password))
+    err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(loginRequest.Password))
     if err != nil {
         http.Error(w, "Invalid credentials", http.StatusUnauthorized)
         return
@@ -88,6 +99,45 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     }
 
     response := map[string]string{"token": token}
+    jsonResponse, _ := json.Marshal(response)
+    w.Header().Set("Content-Type", "application/json")
+    w.WriteHeader(http.StatusOK)
+    w.Write(jsonResponse)
+}
+
+func meHandler(w http.ResponseWriter, r *http.Request) {
+    // 認証済みのユーザーのみアクセスを許可するエンドポイント
+    // 例えば、JWT (JSON Web Token) を使用するなど
+    jwtSecret := os.Getenv("JWT_SECRET")
+    tokenStringWithBearer := r.Header.Get("Authorization")
+    tokenString := tokenStringWithBearer[7:]
+    token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+        return []byte(jwtSecret), nil
+    })
+    if err != nil {
+        http.Error(w, "Invalid token", http.StatusUnauthorized)
+        return
+    }
+
+    claims, ok := token.Claims.(jwt.MapClaims)
+    if !ok {
+        http.Error(w, "Invalid token", http.StatusUnauthorized)
+        return
+    }
+
+    username, ok := claims["username"].(string)
+    if !ok {
+        http.Error(w, "Invalid token", http.StatusUnauthorized)
+        return
+    }
+
+    authenticatedUser, ok := authenticatedUsers[username]
+    if !ok {
+        http.Error(w, "User not found", http.StatusUnauthorized)
+        return
+    }
+
+    response := map[string]string{"username": authenticatedUser.Username, "age": string(authenticatedUser.Age)}
     jsonResponse, _ := json.Marshal(response)
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
