@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	_ "fmt"
 	"log"
@@ -41,10 +42,11 @@ func main() {
 
     loadAdmins()
 
+    //meHandlerだけ認証をかける
     mux := http.NewServeMux()
     mux.HandleFunc("/login", loginHandler)
     mux.HandleFunc("/health_check", healthCheckHandler)
-    mux.HandleFunc("/me", meHandler)
+    mux.Handle("/me", authMiddleware(http.HandlerFunc(meHandler)))
 
     handler := corsMiddleware(mux)
 
@@ -61,6 +63,42 @@ func corsMiddleware(next http.Handler) http.Handler {
             w.WriteHeader(http.StatusOK)
             return
         }
+        next.ServeHTTP(w, r)
+    })
+}
+
+func authMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        jwtSecret := os.Getenv("JWT_SECRET")
+        tokenStringWithBearer := r.Header.Get("Authorization")
+        tokenString := tokenStringWithBearer[7:]
+        token, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+            return []byte(jwtSecret), nil
+        })
+        if err != nil {
+            http.Error(w, "Invalid token", http.StatusUnauthorized)
+            return
+        }
+
+        claims, ok := token.Claims.(jwt.MapClaims)
+        if !ok {
+            http.Error(w, "Invalid token", http.StatusUnauthorized)
+            return
+        }
+
+        username, ok := claims["username"].(string)
+        if !ok {
+            http.Error(w, "Invalid token", http.StatusUnauthorized)
+            return
+        }
+
+        authenticatedUser, ok := authenticatedUsers[username]
+        if !ok {
+            http.Error(w, "User not found", http.StatusUnauthorized)
+            return
+        }
+
+        r = r.WithContext(context.WithValue(r.Context(), "user", authenticatedUser))
         next.ServeHTTP(w, r)
     })
 }
