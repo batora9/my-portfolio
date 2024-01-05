@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"os"
-    
+
+	"github.com/dgrijalva/jwt-go"
 	"github.com/joho/godotenv"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -76,8 +77,17 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
     // ログイン成功時の処理
     // 適切な認証トークンやセッションを生成し、フロントエンドに返す
     // 例えば、JWT (JSON Web Token) を使用するなど
+    jwtSecret := os.Getenv("JWT_SECRET")
+    jwtToken := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+        "username": user.Username,
+    })
+    token, err := jwtToken.SignedString([]byte(jwtSecret))
+    if err != nil {
+        http.Error(w, "Failed to generate token", http.StatusInternalServerError)
+        return
+    }
 
-    response := map[string]string{"token": "your_generated_token_here"}
+    response := map[string]string{"token": token}
     jsonResponse, _ := json.Marshal(response)
     w.Header().Set("Content-Type", "application/json")
     w.WriteHeader(http.StatusOK)
