@@ -11,6 +11,8 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { Container } from "@mui/material";
 import { Login } from "./pages/login";
 import { Admin } from "./pages/admin-home";
+import { MakeArticle } from "./pages/admin-makearticle";
+import { ArticleList } from "./pages/admin-articlelist";
 import { AuthUserProvider } from "./providers/user";
 import { AuthProtection, UnauthProtection } from "./lib/router";
 
@@ -35,22 +37,10 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/blog" element={<Blogs />} />
                 <Route path="/about" element={<About />} />
-                <Route
-                  path="/login"
-                  element={
-                    <UnauthProtection>
-                      <Login />
-                    </UnauthProtection>
-                  }
-                />
-                <Route
-                  path="/admin"
-                  element={
-                    <AuthProtection>
-                      <Admin />
-                    </AuthProtection>
-                  }
-                />
+                <Route path="/login" element={<UnauthProtection><Login /></UnauthProtection>}/>
+                <Route path="/admin" element={<AuthProtection><Admin /></AuthProtection>}/>
+                <Route path="/admin/make-article" element={<AuthProtection><MakeArticle /></AuthProtection>}/>
+                <Route path="/admin/article-list" element={<AuthProtection><ArticleList /></AuthProtection>}/>
                 <Route path="*" element={<Page404 />} />
               </Routes>
             </Container>
