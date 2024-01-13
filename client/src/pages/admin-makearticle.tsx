@@ -2,6 +2,7 @@ import { useEffect, useState, FormEventHandler } from "react";
 import { Container } from "@mui/material";
 import { TextField } from "@mui/material";
 import { Button } from "@mui/material";
+import Markdown from 'react-markdown'
 
 export const MakeArticle = () => {
   useEffect(() => {
@@ -73,7 +74,7 @@ export const MakeArticle = () => {
         {posts.map((post) => (
           <div key={post.id} className="post-list__item">
             <span className="post-list__item__title">{post.title}</span>
-            <span className="post-list__item__content">{post.content}</span>
+            <span className="post-list__item__content"><Markdown>{post.content}</Markdown></span>
             <span className="post-list__item__date">
               {new Date(post.created_at).toLocaleString('ja-JP')}
             </span>
