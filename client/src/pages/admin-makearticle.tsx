@@ -74,7 +74,7 @@ export const MakeArticle = () => {
               }
               timer = setTimeout(() => {
                 setContent(e.target.value);
-              }, 1000);
+              }, 100);
             }}
           />
           <Button type="submit" variant="contained" color="primary">
