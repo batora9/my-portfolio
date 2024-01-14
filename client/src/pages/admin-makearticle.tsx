@@ -53,7 +53,7 @@ export const MakeArticle = () => {
   return (
     <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
       <main className="app-container">
-        <h2>新規投稿</h2>
+        <h2>記事作成</h2>
         <form onSubmit={handleSubmit} className="post-form">
           <TextField
             name="title"

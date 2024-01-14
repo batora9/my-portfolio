@@ -32,7 +32,7 @@ export const ArticleList = () => {
   return (
     <div>
       <Container maxWidth="md" sx={{ pt: 4, pb: 4 }}>
-        <h2>投稿一覧</h2>
+        <h2>記事一覧</h2>
         <div className="post-list">
           {posts.map((post) => (
             <div key={post.id} className="post-list__item">
